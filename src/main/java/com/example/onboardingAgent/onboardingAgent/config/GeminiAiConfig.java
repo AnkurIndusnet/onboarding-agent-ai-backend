@@ -1,16 +1,20 @@
 package com.example.onboardingAgent.onboardingAgent.config;
 
-import org.springframework.ai.chat.client.ChatClient;
+import com.google.genai.Client;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GeminiAiConfig {
 
+    @Value("${spring.ai.google.genai.api-key}")
+    private String apiKey;
+
     @Bean
-    ChatClient chatClient(ChatClient.Builder builder) {
-        return builder
-                .defaultSystem("You are an AI onboarding assistant.")
+    public Client geminiClient() {
+        return Client.builder()
+                .apiKey(apiKey)
                 .build();
     }
 }

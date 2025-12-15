@@ -1,8 +1,10 @@
 package com.example.onboardingAgent.onboardingAgent.hr.controller;
 
+import com.example.onboardingAgent.onboardingAgent.hr.dto.request.SampleRequestDto;
+import com.example.onboardingAgent.onboardingAgent.hr.service.GeminiApiService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,18 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/chat")
 @RequiredArgsConstructor
 public class ChatController {
-    private final ChatClient chatClient;
+   private final GeminiApiService geminiApiService;
 
-    @GetMapping("/message")
-    public String getChatMessage() {
-        // Example interaction with the chat client
-        String response = chatClient
-                .prompt()
-                .system("You are a test assistant")
-                .user("Reply only with: Gemini connected")
-                .call()
-                .content();
+    @PostMapping("/message")
+    public String getChatMessage(@RequestBody SampleRequestDto requestDto) {
 
-        return response;
+            return geminiApiService.generateText(
+                    requestDto.getQuestion()
+            );
+
     }
 }
