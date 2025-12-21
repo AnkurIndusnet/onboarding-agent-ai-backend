@@ -1,4 +1,4 @@
 package com.example.onboardingAgent.onboardingAgent.ai;
 
-public interface GeminiPromptService {
+public class GeminiPromptService {
 }
