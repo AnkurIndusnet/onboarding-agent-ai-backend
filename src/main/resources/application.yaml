@@ -40,3 +40,8 @@ logging:
 
 server:
   port: 8082
+
+
+jwt:
+  secret: RNG50OC+3eDvyStudoQ/n86XIVjbC6M20jHo2y7FVNA=
+  expiry: 3600000  # 1 hour in milliseconds

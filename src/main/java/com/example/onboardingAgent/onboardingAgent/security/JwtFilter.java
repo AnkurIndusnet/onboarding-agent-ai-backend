@@ -1,63 +1,59 @@
 package com.example.onboardingAgent.onboardingAgent.security;
 
-import io.jsonwebtoken.Claims;
+import com.example.onboardingAgent.onboardingAgent.model.UserEntity;
+import com.example.onboardingAgent.onboardingAgent.repository.UserRepository;
+import com.example.onboardingAgent.onboardingAgent.security.service.JwtService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class JwtFilter implements Filter {
+public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+
+    private final JwtService jwtService;
+
+
+    private final UserRepository userRepo;
 
     @Override
-    public void doFilter(
-            ServletRequest req,
-            ServletResponse res,
-            FilterChain chain
-    ) throws IOException, ServletException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
-        HttpServletRequest request = (HttpServletRequest) req;
+        String authHeader = request.getHeader("Authorization");
 
-        // ✅ SKIP AUTH ENDPOINTS
-        if (request.getRequestURI().startsWith("/auth")) {
-            chain.doFilter(req, res);
-            return;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+
+            String token = authHeader.substring(7);
+            String email = jwtService.extractEmail(token);
+
+            UserEntity user = userRepo.findByEmail(email).orElse(null);
+
+            if (user != null) {
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                null,
+                                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRoleId()))
+                        );
+
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
+            }
         }
 
-        String auth = request.getHeader("Authorization");
-
-        if (auth == null || !auth.startsWith("Bearer ")) {
-            ((HttpServletResponse) res)
-                    .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT");
-            return;
-        }
-
-        try {
-            Claims claims = jwtUtil.validate(auth.substring(7));
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            claims.getSubject(),
-                            null,
-                            Collections.emptyList()
-                    );
-
-            SecurityContextHolder.getContext()
-                    .setAuthentication(authentication);
-
-            chain.doFilter(req, res);
-
-        } catch (Exception e) {
-            ((HttpServletResponse) res)
-                    .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT");
-        }
+        filterChain.doFilter(request, response);
     }
 }

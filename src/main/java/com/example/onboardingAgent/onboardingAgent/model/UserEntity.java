@@ -1,0 +1,38 @@
+package com.example.onboardingAgent.onboardingAgent.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String empId;
+
+    private String name;
+
+    @Column(unique = true)
+    private String email;
+
+    private String password; // later use
+
+    private String googleId;
+
+    private Integer roleId; // 2,3,4
+
+    private String location;
+
+    private String designation;
+
+    private boolean passwordRequired = true;
+}

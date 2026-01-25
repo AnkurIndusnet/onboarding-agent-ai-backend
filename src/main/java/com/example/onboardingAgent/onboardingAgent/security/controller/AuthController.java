@@ -1,14 +1,20 @@
 package com.example.onboardingAgent.onboardingAgent.security.controller;
 
 
-import com.example.onboardingAgent.onboardingAgent.model.Employee;
-import com.example.onboardingAgent.onboardingAgent.repository.EmployeeRepository;
-import com.example.onboardingAgent.onboardingAgent.security.JwtUtil;
-import com.example.onboardingAgent.onboardingAgent.security.dto.request.LoginRequest;
-import com.example.onboardingAgent.onboardingAgent.security.service.OtpService;
+import com.example.onboardingAgent.onboardingAgent.model.UserEntity;
+import com.example.onboardingAgent.onboardingAgent.repository.RoleRepository;
+import com.example.onboardingAgent.onboardingAgent.repository.TaskRepository;
+import com.example.onboardingAgent.onboardingAgent.repository.UserRepository;
+import com.example.onboardingAgent.onboardingAgent.security.dto.request.SetPasswordRequest;
+import com.example.onboardingAgent.onboardingAgent.security.dto.response.LoginResponse;
+import com.example.onboardingAgent.onboardingAgent.security.dto.response.UserResponse;
+import com.example.onboardingAgent.onboardingAgent.security.service.GoogleTokenVerifierService;
+import com.example.onboardingAgent.onboardingAgent.security.service.JwtService;
 
-import jakarta.validation.Valid;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,47 +24,94 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final EmployeeRepository employeeRepository;
-    private final OtpService otpService;
-    private final JwtUtil jwtUtil;
+    private final GoogleTokenVerifierService googleService;
 
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody @Valid LoginRequest request) {
-        String email = request.getEmail();
-        Employee emp = employeeRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("Employee not found. Contact HR.")
-                );
+    private final UserRepository userRepo;
 
-//        if (emp.isFirstLogin()) {
-//            otpService.sendOtp(email);
-//            return Map.of("message", "OTP sent to registered email");
-//        }
+    private final RoleRepository roleRepo;
 
-        return Map.of(
-                "token",
-                jwtUtil.generateToken(emp.getEmail(), emp.getRole())
+    private final TaskRepository taskRepo;
+
+    private final JwtService jwtService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    @PostMapping("/google-login")
+    public LoginResponse googleLogin(@RequestBody Map<String, String> body) {
+
+        String token = body.get("token");
+        GoogleIdToken.Payload payload = googleService.verify(token);
+
+        String email = payload.getEmail();
+        String name = (String) payload.get("name");
+        String googleId = payload.getSubject();
+
+        UserEntity user = userRepo.findByEmail(email).orElseGet(() -> {
+            UserEntity u = new UserEntity();
+            u.setEmail(email);
+            u.setName(name);
+            u.setGoogleId(googleId);
+            u.setRoleId(2); // EMPLOYEE
+            u.setEmpId("EMP" + System.currentTimeMillis());
+            u.setPasswordRequired(true);
+            return userRepo.save(u);
+        });
+
+        String jwt = jwtService.generateToken(
+                user.getEmail(),
+                user.getRoleId(),
+                user.getEmpId()
+        );
+
+        return new LoginResponse(jwt, user.isPasswordRequired());
+    }
+
+    @GetMapping("/me")
+    public UserResponse me(Authentication authentication) {
+
+        String email = authentication.getName();
+        UserEntity user = userRepo.findByEmail(email).orElseThrow();
+
+        int pending = taskRepo.countByEmployeeIdAndStatus(user.getEmpId(), "PENDING");
+        int completed = taskRepo.countByEmployeeIdAndStatus(user.getEmpId(), "COMPLETED");
+
+        return new UserResponse(
+                user.getName(),
+                roleRepo.findRoleNameById(user.getRoleId()),
+                user.getEmpId(),
+                pending,
+                completed,
+                user.getLocation(),
+                user.getDesignation()
         );
     }
 
-    @PostMapping("/verify-otp")
-    public Map<String, String> verifyOtp(
-            @RequestParam String email,
-            @RequestParam String otp
+    @PostMapping("/set-password")
+    public LoginResponse setPassword(
+            @RequestBody SetPasswordRequest request,
+            Authentication authentication
     ) {
 
-        otpService.verifyOtp(email, otp);
+        String email = authentication.getName();
 
-        Employee emp = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        UserEntity user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        emp.setFirstLogin(false);
-        emp.setStatus("ACTIVE");
-        employeeRepository.save(emp);
+        if (!user.isPasswordRequired()) {
+            throw new RuntimeException("Password already set");
+        }
 
-        return Map.of(
-                "token",
-                jwtUtil.generateToken(emp.getEmail(), emp.getRole())
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPasswordRequired(false);
+        userRepo.save(user);
+
+        String jwt = jwtService.generateToken(
+                user.getEmail(),
+                user.getRoleId(),
+                user.getEmpId()
         );
+
+        return new LoginResponse(jwt, false);
     }
+
 }
