@@ -12,7 +12,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId;
+    private String employeeId;
     private String type;      // DOCUMENT / ESIGN / TRAINING
     private String status;    // ASSIGNED / DONE
 }
