@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "onboarding_checklist_task")
@@ -37,5 +38,10 @@ public class ChecklistTaskEntity {
     @Column(nullable = false)
     private String userId; // or onboardingId / employeeId
 
-
+    @OneToMany(
+            mappedBy = "task",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<ChecklistTaskFieldEntity> fields;
 }

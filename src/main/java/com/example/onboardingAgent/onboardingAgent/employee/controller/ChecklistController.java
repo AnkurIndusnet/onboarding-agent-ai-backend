@@ -2,10 +2,13 @@ package com.example.onboardingAgent.onboardingAgent.employee.controller;
 
 import com.example.onboardingAgent.onboardingAgent.employee.dto.request.ChecklistGenerateRequest;
 import com.example.onboardingAgent.onboardingAgent.employee.service.ChecklistService;
+import com.example.onboardingAgent.onboardingAgent.security.dto.response.ChecklistTaskFieldResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee/checklist")
@@ -20,4 +23,13 @@ public class ChecklistController {
         return ResponseEntity.ok(
                 checklistService.generateChecklist(req.getRole(),userEmail)
         );    }
+
+    @GetMapping("/{taskId}/fields")
+    public ResponseEntity<List<ChecklistTaskFieldResponseDTO>> getTaskFields(
+            @PathVariable Long taskId
+    ) {
+        return ResponseEntity.ok(
+                checklistService.getFieldsByTaskId(taskId)
+        );
+    }
 }
