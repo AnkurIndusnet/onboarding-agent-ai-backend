@@ -107,4 +107,28 @@ public class ChecklistServiceImpl implements ChecklistService {
                 .map(checklistTaskFieldMapper::toResponse)
                 .toList();
     }
+
+    @Override
+    public List<ChecklistTaskResponseDTO> fetchChecklist(String userEmail) {
+
+        // Resolve user
+        String empId = userRepository.findByEmail(userEmail)
+                .map(UserEntity::getEmpId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Fetch from DB
+        List<ChecklistTaskEntity> tasks =
+                checklistTaskRepository.findByUserIdOrderByAskDateTimeAsc(empId);
+
+        // If none exist → empty list (as required)
+        if (tasks.isEmpty()) {
+            return List.of();
+        }
+
+        // Map to SAME response as generateChecklist
+        return tasks.stream()
+                .map(checklistMapper::toResponse)
+                .toList();
+    }
+
 }

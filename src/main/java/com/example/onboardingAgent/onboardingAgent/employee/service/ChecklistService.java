@@ -8,5 +8,8 @@ import java.util.List;
 public interface ChecklistService {
     List<ChecklistTaskResponseDTO> generateChecklist(String role,String userEmail);
     List<ChecklistTaskFieldResponseDTO> getFieldsByTaskId(Long taskId);
+    List<ChecklistTaskResponseDTO> fetchChecklist(
+            String userEmail
+    );
 }
 
