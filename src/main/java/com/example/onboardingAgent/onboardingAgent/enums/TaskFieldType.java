@@ -6,6 +6,7 @@ public enum TaskFieldType {
     BANK_IFSC,
     BANK_ACCOUNT_NO,
     BANK_ACCOUNT_HOLDER,
+    BRANCH_NAME,
     PAN_NUMBER,
     AADHAAR_NUMBER,
     NDA_DOCUMENT,
@@ -17,5 +18,9 @@ public enum TaskFieldType {
 
     // ORIENTATION
     TRAINING_ACK,
-    POLICY_ACK
+    POLICY_ACK,
+
+    //ADMIN
+    OFFER_LETTER,
+    JOINING_FORM
 }

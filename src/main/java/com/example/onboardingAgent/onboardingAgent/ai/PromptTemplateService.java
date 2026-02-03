@@ -9,7 +9,7 @@ public class PromptTemplateService {
         return """
         You are an HR onboarding assistant.
         Generate onboarding checklist for role: %s.
-        type must be one of DOCUMENT, SETUP, ORIENTATION, ADMIN.
+        type must be one of BANK_DOCUMENT,PERSONAL_DOCUMENT, SETUP, ORIENTATION,ADMIN.
         priority must be one of HIGH, MEDIUM, LOW.
         Return STRICT JSON ARRAY:
         [

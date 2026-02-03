@@ -1,6 +1,6 @@
 package com.example.onboardingAgent.onboardingAgent.enums;
 
 public enum TaskType {
-    DOCUMENT, SETUP, ORIENTATION, ADMIN
+    BANK_DOCUMENT,PERSONAL_DOCUMENT, SETUP, ORIENTATION, ADMIN
 
 }
