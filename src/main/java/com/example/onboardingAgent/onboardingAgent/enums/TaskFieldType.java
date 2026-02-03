@@ -10,6 +10,8 @@ public enum TaskFieldType {
     PAN_NUMBER,
     AADHAAR_NUMBER,
     NDA_DOCUMENT,
+    MARKSHEET,
+    EXPERIENCE_LETTER,
 
     // SETUP
     EMAIL_ID,

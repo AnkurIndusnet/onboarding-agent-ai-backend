@@ -7,20 +7,52 @@ public class PromptTemplateService {
 
     public String checklistPrompt(String role) {
         return """
-        You are an HR onboarding assistant.
-        Generate onboarding checklist for role: %s.
-        type must be one of BANK_DOCUMENT,PERSONAL_DOCUMENT, SETUP, ORIENTATION,ADMIN.
-        priority must be one of HIGH, MEDIUM, LOW.
-        Return STRICT JSON ARRAY:
-        [
-          {
-            "task": "Submit Aadhaar",
-            "type": "DOCUMENT",
-            "priority": "HIGH"
-          }
-        ]
-        """.formatted(role);
+    You are an enterprise HR onboarding assistant.
+
+    Generate a COARSE-GRAINED onboarding checklist for role: %s.
+
+    IMPORTANT:
+    - Generate AT MOST 5 tasks.
+    - Each task must map to ONE of the following canonical buckets ONLY.
+    - Do NOT create tasks outside these buckets.
+    - Do NOT split tasks further.
+
+    CANONICAL TASK BUCKETS (use these EXACTLY):
+    1. Bank Details
+    2. Identity Documents
+    3. IT & Workspace Setup
+    4. Orientation & Introductions
+    5. Policies & Acknowledgements
+
+    TASK TYPE MAPPING:
+    - Bank Details → BANK_DOCUMENT
+    - Identity Documents → PERSONAL_DOCUMENT
+    - IT & Workspace Setup → SETUP
+    - Orientation & Introductions → ORIENTATION
+    - Policies & Acknowledgements → ADMIN
+
+    PRIORITY RULES:
+    - Bank Details, Identity Documents → HIGH
+    - IT & Workspace Setup → HIGH
+    - Orientation → MEDIUM
+    - Policies → MEDIUM
+
+    OUTPUT RULES:
+    - Return ONLY valid JSON
+    - No markdown
+    - No explanations
+
+    JSON format:
+    [
+      {
+        "task": "Bank Details",
+        "type": "BANK_DOCUMENT",
+        "priority": "HIGH"
+      }
+    ]
+    """.formatted(role);
     }
+
 
     public String ocrValidationPrompt(String docType, String text) {
 
