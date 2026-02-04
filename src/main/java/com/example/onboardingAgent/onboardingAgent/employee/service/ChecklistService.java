@@ -1,5 +1,6 @@
 package com.example.onboardingAgent.onboardingAgent.employee.service;
 
+import com.example.onboardingAgent.onboardingAgent.employee.dto.request.TaskSubmitRequestDTO;
 import com.example.onboardingAgent.onboardingAgent.security.dto.response.ChecklistTaskFieldResponseDTO;
 import com.example.onboardingAgent.onboardingAgent.security.dto.response.ChecklistTaskResponseDTO;
 
@@ -11,5 +12,6 @@ public interface ChecklistService {
     List<ChecklistTaskResponseDTO> fetchChecklist(
             String userEmail
     );
+    void submitTask(TaskSubmitRequestDTO request);
 }
 

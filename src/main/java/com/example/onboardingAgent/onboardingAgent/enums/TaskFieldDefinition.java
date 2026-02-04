@@ -21,13 +21,13 @@ public enum TaskFieldDefinition {
             true,
             false
     ),
-    NDA_DOCUMENT(
-            TaskType.PERSONAL_DOCUMENT,
-            "NDA / Confidentiality Agreement",
-            FieldInputType.DOCUMENT,
-            true,
-            false
-    ),
+//    NDA_DOCUMENT(
+//            TaskType.PERSONAL_DOCUMENT,
+//            "NDA / Confidentiality Agreement",
+//            FieldInputType.DOCUMENT,
+//            true,
+//            false
+//    ),
     MARKSHEET(
             TaskType.PERSONAL_DOCUMENT,
             "Educational Marksheet",
@@ -39,7 +39,7 @@ public enum TaskFieldDefinition {
             TaskType.PERSONAL_DOCUMENT,
             "Experience Letter from College / Previous Employer",
             FieldInputType.DOCUMENT,
-            true,
+            false,
             false
     ),
 

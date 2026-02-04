@@ -76,6 +76,7 @@ VALIDATION RULES:
 - Format: DD-MM-YYYY or DD/MM/YYYY
 - Must be a real calendar date
 - Must NOT be a future date
+- Only Mandatory for AADHAAR and PAN
 
 
 3. DOCUMENT NUMBER FORMAT
@@ -84,6 +85,7 @@ IF DOCUMENT TYPE = AADHAAR:
 - Must be exactly 12 digits
 - Regex: ^\\d{12}$
 - Person must be at least 6 years old
+- Format can be - xxxx xxxx xxxx or xxxxxxxxxxxx
 
 IF DOCUMENT TYPE = PAN:
 - Format: 5 uppercase letters, 4 digits, 1 uppercase letter
@@ -94,6 +96,14 @@ IF DOCUMENT TYPE = PASSPORT (INDIA):
 - Format: 1 uppercase letter followed by 7 digits
 - Regex: ^[A-Z][0-9]{7}$
 - Person must be at least 18 years old
+
+IF DOCUMENT TYPE = MARKSHEET:
+- SL NO / Roll Number must be alphanumeric
+- Length between 5 to 15 characters 
+
+IF DOCUMENT TYPE = EXPERIENCE LETTER:
+- Employee ID / Roll No/Staff No/ID must be alphanumeric
+- Length between 5 to 15 characters
 
 ----------------------------------
 DECISION RULES:
@@ -162,10 +172,18 @@ public String ocrCleanupPrompt(String rawOcrText){
                 - Date of Birth (DOB)
                 - Aadhaar Number
                 
+                If Marksheet or Grade Card
+                - Name
+                - SL NO / Roll Number
+                
+                If Experience Letter / Employment Certificate
+                - Name
+                - Employee ID / Roll No/Staff No/ID
+                
                 OUTPUT FORMAT (STRICT — NO MARKDOWN):
                 
                 {
-                  "documentType": "<PAN | AADHAAR | UNKNOWN>",
+                  "documentType": "<PAN | AADHAAR | MARKSHEET | EXPERIENCE LETTER | UNKNOWN>",
                   "extractedText": "Name: <value>\\nDOB: <value>\\nID: <value>"
                 }
                 

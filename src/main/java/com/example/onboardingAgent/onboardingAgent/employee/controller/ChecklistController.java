@@ -1,6 +1,7 @@
 package com.example.onboardingAgent.onboardingAgent.employee.controller;
 
 import com.example.onboardingAgent.onboardingAgent.employee.dto.request.ChecklistGenerateRequest;
+import com.example.onboardingAgent.onboardingAgent.employee.dto.request.TaskSubmitRequestDTO;
 import com.example.onboardingAgent.onboardingAgent.employee.dto.response.OcrValidationResponseDTO;
 import com.example.onboardingAgent.onboardingAgent.employee.service.ChecklistService;
 import com.example.onboardingAgent.onboardingAgent.security.dto.response.ChecklistTaskFieldResponseDTO;
@@ -47,5 +48,13 @@ public class ChecklistController {
         );
     }
 
+
+    @PostMapping("/submit")
+    public ResponseEntity<?> submitTask(
+            @RequestBody TaskSubmitRequestDTO request
+    ) {
+        checklistService.submitTask(request);
+        return ResponseEntity.ok().build();
+    }
 
 }

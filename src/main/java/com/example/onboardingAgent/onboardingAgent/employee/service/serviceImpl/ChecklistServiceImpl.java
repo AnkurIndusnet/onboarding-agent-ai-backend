@@ -1,6 +1,7 @@
 package com.example.onboardingAgent.onboardingAgent.employee.service.serviceImpl;
 
 import com.example.onboardingAgent.onboardingAgent.ai.PromptTemplateService;
+import com.example.onboardingAgent.onboardingAgent.employee.dto.request.TaskSubmitRequestDTO;
 import com.example.onboardingAgent.onboardingAgent.employee.service.ChecklistService;
 import com.example.onboardingAgent.onboardingAgent.hr.service.GeminiApiService;
 import com.example.onboardingAgent.onboardingAgent.model.ChecklistTaskEntity;
@@ -19,10 +20,14 @@ import com.example.onboardingAgent.onboardingAgent.utility.GeminiJsonExtractor;
 import com.example.onboardingAgent.onboardingAgent.utility.TaskFieldFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +134,54 @@ public class ChecklistServiceImpl implements ChecklistService {
         return tasks.stream()
                 .map(checklistMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public void submitTask(TaskSubmitRequestDTO request) {
+
+        ChecklistTaskEntity task = checklistTaskRepository.findById(request.getTaskId())
+                .orElseThrow(() ->
+                        new RuntimeException("Task not found"));
+
+        List<ChecklistTaskFieldEntity> fields =
+                checklistTaskFieldRepository1.findByTask_TaskId(task.getTaskId());
+
+        if (fields.isEmpty()) {
+            throw new RuntimeException("No fields found for task");
+        }
+
+        Map<Long, String> submittedMap =
+                request.getValues().stream()
+                        .collect(Collectors.toMap(
+                                TaskSubmitRequestDTO.FieldValueDTO::getFieldId,
+                                TaskSubmitRequestDTO.FieldValueDTO::getValue
+                        ));
+
+        for (ChecklistTaskFieldEntity field : fields) {
+
+            if (!submittedMap.containsKey(field.getFieldId())) {
+                throw new RuntimeException(
+                        "Missing value for fieldId: " + field.getFieldId()
+                );
+            }
+
+            String value = submittedMap.get(field.getFieldId());
+
+            if (Boolean.TRUE.equals(field.getRequired())
+                    && (value == null || value.isBlank())) {
+                throw new RuntimeException(
+                        "Required field empty: " + field.getLabel()
+                );
+            }
+
+            field.setValue(value);
+        }
+
+        checklistTaskFieldRepository1.saveAll(fields);
+
+        task.setSubmissionDateTime(LocalDateTime.now());
+        checklistTaskRepository.save(task);
     }
 
 }
