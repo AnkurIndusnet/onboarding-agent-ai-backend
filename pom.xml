@@ -108,7 +108,16 @@
             <artifactId>google-http-client-jackson2</artifactId>
             <version>1.44.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>5.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>1.4.0</version>  <!-- or latest 1.4.x if newer exists -->
+        </dependency>
 
     </dependencies>
 	<dependencyManagement>

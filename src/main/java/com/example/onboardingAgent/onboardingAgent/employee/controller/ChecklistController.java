@@ -1,13 +1,16 @@
 package com.example.onboardingAgent.onboardingAgent.employee.controller;
 
 import com.example.onboardingAgent.onboardingAgent.employee.dto.request.ChecklistGenerateRequest;
+import com.example.onboardingAgent.onboardingAgent.employee.dto.response.OcrValidationResponseDTO;
 import com.example.onboardingAgent.onboardingAgent.employee.service.ChecklistService;
 import com.example.onboardingAgent.onboardingAgent.security.dto.response.ChecklistTaskFieldResponseDTO;
 import com.example.onboardingAgent.onboardingAgent.security.dto.response.ChecklistTaskResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,4 +46,6 @@ public class ChecklistController {
                 checklistService.fetchChecklist(userEmail)
         );
     }
+
+
 }

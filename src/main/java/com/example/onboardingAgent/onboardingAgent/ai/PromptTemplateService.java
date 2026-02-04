@@ -105,7 +105,7 @@ DECISION RULES:
 - DO NOT hallucinate values
 
 ----------------------------------
-RESPONSE FORMAT (STRICT JSON ONLY):
+RESPONSE FORMAT (STRICT JSON ARRAY ONLY):
 
 {
   "valid": true | false,
@@ -119,6 +119,7 @@ RESPONSE FORMAT (STRICT JSON ONLY):
   }
 }
 
+
 ----------------------------------
 OCR TEXT:
 %s
@@ -126,7 +127,55 @@ OCR TEXT:
 """.formatted(docType, text);
     }
 
-
+public String ocrCleanupPrompt(String rawOcrText){
+        return """
+                You are a STRICT OCR post-processing engine.
+                
+                The following text is RAW OCR output extracted from a document.
+                The text may contain:
+                - broken words
+                - random symbols
+                - incorrect spacing
+                - missing separators
+                
+                Your task:
+                - Identify the document type
+                - Extract ONLY the following fields if present
+                - Normalize them into a clean, readable format
+                
+                RULES (VERY IMPORTANT):
+                - Do NOT guess missing values
+                - Do NOT invent data
+                - If a field is not found, leave it empty
+                - Remove noise and symbols
+                - Keep original values exactly (no correction)
+                
+                FIELDS TO EXTRACT (based on document type):
+                
+                If PAN:
+                - Name
+                - PAN Number
+                - Date of Birth (DOB)
+                
+                If Aadhaar:
+                - Name
+                - Date of Birth (DOB)
+                - Aadhaar Number
+                
+                OUTPUT FORMAT (STRICT — NO MARKDOWN):
+                
+                {
+                  "documentType": "<PAN | AADHAAR | UNKNOWN>",
+                  "extractedText": "Name: <value>\\nDOB: <value>\\nID: <value>"
+                }
+                
+                ----------------------------------
+                RAW OCR TEXT:
+                %s
+                ----------------------------------
+                
+                """.formatted(rawOcrText);
+    }
     public String readinessPrompt(String checklistJson) {
         return """
         Calculate readiness score based on checklist.
