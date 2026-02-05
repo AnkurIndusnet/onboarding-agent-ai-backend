@@ -35,4 +35,8 @@ public class UserEntity {
     private String designation;
 
     private boolean passwordRequired = true;
+
+    private boolean documentRequired = true;
+
+    private boolean verificationRequired = true;
 }

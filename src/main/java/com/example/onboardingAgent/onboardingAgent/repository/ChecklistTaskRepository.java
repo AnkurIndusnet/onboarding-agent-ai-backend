@@ -9,4 +9,8 @@ public interface ChecklistTaskRepository
         extends JpaRepository<ChecklistTaskEntity, Long> {
     List<ChecklistTaskEntity> findByUserIdOrderByAskDateTimeAsc(String empId);
 
+    int countByUserIdAndSubmissionDateTimeIsNotNull(String empId);
+
+    int countByUserIdAndSubmissionDateTimeIsNull(String empId);
+
 }

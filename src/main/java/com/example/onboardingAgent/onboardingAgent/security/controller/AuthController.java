@@ -2,6 +2,7 @@ package com.example.onboardingAgent.onboardingAgent.security.controller;
 
 
 import com.example.onboardingAgent.onboardingAgent.model.UserEntity;
+import com.example.onboardingAgent.onboardingAgent.repository.ChecklistTaskRepository;
 import com.example.onboardingAgent.onboardingAgent.repository.RoleRepository;
 import com.example.onboardingAgent.onboardingAgent.repository.TaskRepository;
 import com.example.onboardingAgent.onboardingAgent.repository.UserRepository;
@@ -35,6 +36,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     private final PasswordEncoder passwordEncoder;
+    private final ChecklistTaskRepository checklistTaskRepository;
 
     @PostMapping("/google-login")
     public LoginResponse googleLogin(@RequestBody Map<String, String> body) {
@@ -54,6 +56,8 @@ public class AuthController {
             u.setRoleId(2); // EMPLOYEE
             u.setEmpId("EMP" + System.currentTimeMillis());
             u.setPasswordRequired(true);
+            u.setDocumentRequired(true);
+            u.setVerificationRequired(true);
             return userRepo.save(u);
         });
 
@@ -72,8 +76,8 @@ public class AuthController {
         String email = authentication.getName();
         UserEntity user = userRepo.findByEmail(email).orElseThrow();
 
-        int pending = taskRepo.countByEmployeeIdAndStatus(user.getEmpId(), "PENDING");
-        int completed = taskRepo.countByEmployeeIdAndStatus(user.getEmpId(), "COMPLETED");
+        int pending = checklistTaskRepository.countByUserIdAndSubmissionDateTimeIsNull(user.getEmpId());
+        int completed = checklistTaskRepository.countByUserIdAndSubmissionDateTimeIsNotNull(user.getEmpId());
 
         return new UserResponse(
                 user.getName(),
