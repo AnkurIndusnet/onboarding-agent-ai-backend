@@ -32,6 +32,7 @@ public class TaskFieldFactory {
         f.setRequired(def.isRequired());
         f.setReadOnly(def.isReadOnly());
         f.setValue("");
+        f.setStatus(def.getStatus());
         return f;
     }
 }

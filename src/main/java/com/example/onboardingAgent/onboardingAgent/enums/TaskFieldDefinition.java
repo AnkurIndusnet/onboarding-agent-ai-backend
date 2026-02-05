@@ -12,35 +12,40 @@ public enum TaskFieldDefinition {
             "PAN Card",
             FieldInputType.DOCUMENT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
     AADHAAR_CARD(
             TaskType.PERSONAL_DOCUMENT,
             "Aadhaar Card",
             FieldInputType.DOCUMENT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
 //    NDA_DOCUMENT(
 //            TaskType.PERSONAL_DOCUMENT,
 //            "NDA / Confidentiality Agreement",
 //            FieldInputType.DOCUMENT,
 //            true,
-//            false
+//            false,
+//            MasterTaskStatus.PENDING
 //    ),
     MARKSHEET(
             TaskType.PERSONAL_DOCUMENT,
             "Educational Marksheet",
             FieldInputType.DOCUMENT,
             true,
-            false
+            false,
+        MasterTaskStatus.PENDING
     ),
     EXPERIENCE_LETTER(
             TaskType.PERSONAL_DOCUMENT,
             "Experience Letter from College / Previous Employer",
             FieldInputType.DOCUMENT,
             false,
-            false
+            false,
+            MasterTaskStatus.NOT_REQUIRED
     ),
 
     // -------- BANK DETAILS --------
@@ -49,21 +54,24 @@ public enum TaskFieldDefinition {
             "IFSC Code",
             FieldInputType.TEXT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
     BANK_ACCOUNT_NO(
             TaskType.BANK_DOCUMENT,
             "Account Number",
             FieldInputType.TEXT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
     BANK_ACCOUNT_HOLDER(
             TaskType.BANK_DOCUMENT,
             "Account Holder Name",
             FieldInputType.TEXT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
 
     BRANCH_NAME(
@@ -71,7 +79,8 @@ public enum TaskFieldDefinition {
             "Branch Name",
             FieldInputType.TEXT,
             false,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
 
     // -------- SETUP --------
@@ -80,21 +89,24 @@ public enum TaskFieldDefinition {
             "Company Email",
             FieldInputType.TEXT,
             true,
-            true
+            true,
+            MasterTaskStatus.NOT_REQUIRED
     ),
     LAPTOP_SERIAL(
             TaskType.SETUP,
             "Laptop Serial Number",
             FieldInputType.TEXT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
     ACCESS_CARD(
             TaskType.SETUP,
             "Access Card Number",
             FieldInputType.TEXT,
             false,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
 
     // -------- ORIENTATION --------
@@ -103,14 +115,16 @@ public enum TaskFieldDefinition {
             "Training Acknowledgement",
             FieldInputType.CHECKBOX,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
     POLICY_ACK(
             TaskType.ORIENTATION,
             "Policy Acknowledgement",
             FieldInputType.CHECKBOX,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     ),
     // -------- ADMIN --------
     OFFER_LETTER(
@@ -118,14 +132,16 @@ public enum TaskFieldDefinition {
             "Offer Letter",
             FieldInputType.DOCUMENT,
             true,
-            true
+            true,
+            MasterTaskStatus.PENDING
     ),
     JOINING_FORM(
             TaskType.ADMIN,
             "Joining Form",
             FieldInputType.DOCUMENT,
             true,
-            false
+            false,
+            MasterTaskStatus.PENDING
     )
     ;
 
@@ -134,4 +150,5 @@ public enum TaskFieldDefinition {
     private final FieldInputType inputType;
     private final boolean required;
     private final boolean readOnly;
+    private final MasterTaskStatus status;
 }

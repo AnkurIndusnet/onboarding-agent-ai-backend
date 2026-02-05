@@ -3,6 +3,7 @@ package com.example.onboardingAgent.onboardingAgent.employee.service.serviceImpl
 import com.example.onboardingAgent.onboardingAgent.ai.PromptTemplateService;
 import com.example.onboardingAgent.onboardingAgent.employee.dto.request.TaskSubmitRequestDTO;
 import com.example.onboardingAgent.onboardingAgent.employee.service.ChecklistService;
+import com.example.onboardingAgent.onboardingAgent.enums.MasterTaskStatus;
 import com.example.onboardingAgent.onboardingAgent.hr.service.GeminiApiService;
 import com.example.onboardingAgent.onboardingAgent.model.ChecklistTaskEntity;
 import com.example.onboardingAgent.onboardingAgent.model.ChecklistTaskFieldEntity;
@@ -160,11 +161,11 @@ public class ChecklistServiceImpl implements ChecklistService {
 
         for (ChecklistTaskFieldEntity field : fields) {
 
-            if (!submittedMap.containsKey(field.getFieldId())) {
-                throw new RuntimeException(
-                        "Missing value for fieldId: " + field.getFieldId()
-                );
-            }
+//            if (!submittedMap.containsKey(field.getFieldId())) {
+//                throw new RuntimeException(
+//                        "Missing value for fieldId: " + field.getFieldId()
+//                );
+//            }
 
             String value = submittedMap.get(field.getFieldId());
 
@@ -176,11 +177,13 @@ public class ChecklistServiceImpl implements ChecklistService {
             }
 
             field.setValue(value);
+            field.setStatus(MasterTaskStatus.VERIFICATION_REQUIRED);
         }
 
         checklistTaskFieldRepository1.saveAll(fields);
 
         task.setSubmissionDateTime(LocalDateTime.now());
+        task.setStatus(MasterTaskStatus.VERIFICATION_REQUIRED);
         checklistTaskRepository.save(task);
     }
 

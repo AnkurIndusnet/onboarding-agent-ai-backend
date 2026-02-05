@@ -14,4 +14,5 @@ public class ChecklistTaskFieldResponseDTO {
     private Boolean required;
     private Boolean readOnly;
     private String value;
+    private String status;
 }

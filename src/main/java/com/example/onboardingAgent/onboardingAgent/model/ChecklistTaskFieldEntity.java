@@ -1,5 +1,6 @@
 package com.example.onboardingAgent.onboardingAgent.model;
 
+import com.example.onboardingAgent.onboardingAgent.enums.MasterTaskStatus;
 import com.example.onboardingAgent.onboardingAgent.enums.TaskFieldType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -25,4 +26,5 @@ public class ChecklistTaskFieldEntity {
     private Boolean required;
     private Boolean readOnly;
     private String value;
+    private MasterTaskStatus status;
 }

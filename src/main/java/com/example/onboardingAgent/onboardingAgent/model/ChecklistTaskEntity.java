@@ -1,5 +1,6 @@
 package com.example.onboardingAgent.onboardingAgent.model;
 
+import com.example.onboardingAgent.onboardingAgent.enums.MasterTaskStatus;
 import com.example.onboardingAgent.onboardingAgent.enums.Priority;
 import com.example.onboardingAgent.onboardingAgent.enums.TaskType;
 import jakarta.persistence.*;
@@ -44,4 +45,6 @@ public class ChecklistTaskEntity {
             orphanRemoval = true
     )
     private List<ChecklistTaskFieldEntity> fields;
+
+    private MasterTaskStatus status; // PENDING, COMPLETED, VERIFICATION_REQUIRED
 }

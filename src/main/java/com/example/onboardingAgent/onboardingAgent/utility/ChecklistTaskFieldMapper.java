@@ -18,6 +18,7 @@ public class ChecklistTaskFieldMapper {
                 .required(entity.getRequired())
                 .readOnly(entity.getReadOnly())
                 .value(entity.getValue())
+                .status(entity.getStatus().name())
                 .build();
     }
 }

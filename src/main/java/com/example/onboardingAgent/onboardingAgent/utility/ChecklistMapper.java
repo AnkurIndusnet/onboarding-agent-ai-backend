@@ -1,5 +1,6 @@
 package com.example.onboardingAgent.onboardingAgent.utility;
 
+import com.example.onboardingAgent.onboardingAgent.enums.MasterTaskStatus;
 import com.example.onboardingAgent.onboardingAgent.enums.Priority;
 import com.example.onboardingAgent.onboardingAgent.enums.TaskType;
 import com.example.onboardingAgent.onboardingAgent.model.ChecklistTaskEntity;
@@ -23,6 +24,7 @@ public class ChecklistMapper {
         entity.setAskDateTime(LocalDateTime.now());
         entity.setSubmissionDateTime(null);
         entity.setUserId(userId);
+        entity.setStatus(MasterTaskStatus.PENDING);
         return entity;
     }
 
@@ -34,6 +36,7 @@ public class ChecklistMapper {
                 .priority(entity.getPriority().name())
                 .askDateTime(entity.getAskDateTime())
                 .submissionDateTime(entity.getSubmissionDateTime())
+                .status(entity.getStatus().name())
                 .build();
     }
 }

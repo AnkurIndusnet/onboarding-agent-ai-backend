@@ -14,4 +14,5 @@ public class ChecklistTaskResponseDTO {
     private String priority;
     private LocalDateTime askDateTime;
     private LocalDateTime submissionDateTime;
+    private String status;
 }
