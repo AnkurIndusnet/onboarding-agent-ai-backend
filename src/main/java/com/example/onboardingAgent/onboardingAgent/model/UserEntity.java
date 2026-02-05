@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -43,4 +44,12 @@ public class UserEntity {
     private boolean verificationRequired = true;
 
     private Date dateOfJoining= new Date();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    private UserEntity manager;
+
+    @OneToMany(mappedBy = "manager")
+    private List<UserEntity> teamMembers;
+
 }

@@ -1,7 +1,9 @@
 package com.example.onboardingAgent.onboardingAgent.hr.service;
 
+import com.example.onboardingAgent.onboardingAgent.hr.dto.response.HrDashboardMetricsDTO;
 import com.example.onboardingAgent.onboardingAgent.hr.service.GeminiApiService;
 import com.example.onboardingAgent.onboardingAgent.ai.PromptTemplateService;
+import com.example.onboardingAgent.onboardingAgent.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,16 +11,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HrDashboardService {
 
-    private final GeminiApiService gemini;
-    private final PromptTemplateService prompts;
+    private final UserRepository userRepository;
 
-    public String generateSummary() {
-        String mockStats = """
-        totalEmployees=120
-        pendingChecklists=34
-        verificationRequired=12
-        """;
+    public HrDashboardMetricsDTO getMetrics() {
 
-        return gemini.generateText(prompts.hrDashboardPrompt(mockStats));
+        return HrDashboardMetricsDTO.builder()
+                .activeEmployees(userRepository.countBy())
+                .pendingChecklists(
+                        userRepository.countByDocumentRequiredTrueAndVerificationRequiredFalse()
+                )
+                .verificationRequired(
+                        userRepository.countByDocumentRequiredFalseAndVerificationRequiredTrue()
+                )
+                .unassignedNewHires(
+                        userRepository.countByManagerIsNull()
+                )
+                .build();
     }
 }
