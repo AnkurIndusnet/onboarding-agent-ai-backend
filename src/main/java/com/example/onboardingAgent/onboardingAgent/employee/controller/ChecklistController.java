@@ -51,9 +51,10 @@ public class ChecklistController {
 
     @PostMapping("/submit")
     public ResponseEntity<?> submitTask(
-            @RequestBody TaskSubmitRequestDTO request
+            @RequestBody TaskSubmitRequestDTO request, Authentication authentication
     ) {
-        checklistService.submitTask(request);
+        String userEmail = authentication.getName();
+        checklistService.submitTask(request, userEmail);
         return ResponseEntity.ok().build();
     }
 

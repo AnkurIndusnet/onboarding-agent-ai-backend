@@ -3,6 +3,8 @@ package com.example.onboardingAgent.onboardingAgent.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -39,4 +41,6 @@ public class UserEntity {
     private boolean documentRequired = true;
 
     private boolean verificationRequired = true;
+
+    private Date dateOfJoining= new Date();
 }

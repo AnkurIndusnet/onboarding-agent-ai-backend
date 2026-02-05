@@ -139,7 +139,7 @@ public class ChecklistServiceImpl implements ChecklistService {
 
     @Override
     @Transactional
-    public void submitTask(TaskSubmitRequestDTO request) {
+    public void submitTask(TaskSubmitRequestDTO request, String userEmail) {
 
         ChecklistTaskEntity task = checklistTaskRepository.findById(request.getTaskId())
                 .orElseThrow(() ->
@@ -185,6 +185,20 @@ public class ChecklistServiceImpl implements ChecklistService {
         task.setSubmissionDateTime(LocalDateTime.now());
         task.setStatus(MasterTaskStatus.VERIFICATION_REQUIRED);
         checklistTaskRepository.save(task);
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        int remainingTasks =
+                checklistTaskRepository.countByUserIdAndStatusNot(
+                        user.getEmpId(),
+                        MasterTaskStatus.VERIFICATION_REQUIRED
+                );
+
+        if (remainingTasks == 0) {
+            user.setDocumentRequired(false);
+            user.setVerificationRequired(true);
+            userRepository.save(user);
+        }
     }
 
 }

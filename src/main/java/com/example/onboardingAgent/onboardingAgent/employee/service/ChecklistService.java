@@ -12,6 +12,6 @@ public interface ChecklistService {
     List<ChecklistTaskResponseDTO> fetchChecklist(
             String userEmail
     );
-    void submitTask(TaskSubmitRequestDTO request);
+    void submitTask(TaskSubmitRequestDTO request, String userEmail);
 }
 

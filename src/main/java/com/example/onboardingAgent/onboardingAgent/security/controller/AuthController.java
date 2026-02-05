@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -57,7 +58,8 @@ public class AuthController {
             u.setEmpId("EMP" + System.currentTimeMillis());
             u.setPasswordRequired(true);
             u.setDocumentRequired(true);
-            u.setVerificationRequired(true);
+            u.setVerificationRequired(false);
+            u.setDateOfJoining(new Date());
             return userRepo.save(u);
         });
 
