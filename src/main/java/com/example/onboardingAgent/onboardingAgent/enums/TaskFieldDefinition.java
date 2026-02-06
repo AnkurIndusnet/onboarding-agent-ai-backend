@@ -89,7 +89,7 @@ public enum TaskFieldDefinition {
             "Company Email",
             FieldInputType.TEXT,
             true,
-            true,
+            false,
             MasterTaskStatus.NOT_REQUIRED
     ),
     LAPTOP_SERIAL(
