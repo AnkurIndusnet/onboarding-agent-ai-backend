@@ -104,6 +104,7 @@ IF DOCUMENT TYPE = MARKSHEET:
 IF DOCUMENT TYPE = EXPERIENCE LETTER:
 - Employee ID / Roll No/Staff No/ID must be alphanumeric
 - Length between 5 to 15 characters
+- Name can contain Mr., Ms., Dr.,Mrs. prefixes and suffixes like Jr., Sr.
 
 ----------------------------------
 DECISION RULES:
@@ -179,12 +180,14 @@ public String ocrCleanupPrompt(String rawOcrText){
                 If Experience Letter / Employment Certificate
                 - Name
                 - Employee ID / Roll No/Staff No/ID
+                - mail ID /e-mail/HR Contact (if present)
+                - Company Name(if present)
                 
                 OUTPUT FORMAT (STRICT — NO MARKDOWN):
                 
                 {
                   "documentType": "<PAN | AADHAAR | MARKSHEET | EXPERIENCE LETTER | UNKNOWN>",
-                  "extractedText": "Name: <value>\\nDOB: <value>\\nID: <value>"
+                  "extractedText": "Name: <value>\\nDOB: <value>\\nID: <value>\\nCompany: <value>\\nAuthority Contact: <value>"
                 }
                 
                 ----------------------------------
