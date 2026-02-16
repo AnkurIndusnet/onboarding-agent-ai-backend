@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChecklistServiceImpl implements ChecklistService {
 
     private final GeminiApiService gemini;
@@ -59,8 +61,10 @@ public class ChecklistServiceImpl implements ChecklistService {
         // 1. Prompt
         String prompt = prompts.checklistPrompt(role);
 
+
         // 2. Gemini call
         String rawResponse = gemini.generateText(prompt);
+        log.info("Raw Gemini Checklist Response: {}", rawResponse);
 
         // 3. Parse Gemini JSON safely
         List<GeminiChecklistItemDTO> items;

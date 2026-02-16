@@ -7,4 +7,5 @@ public class GeminiChecklistItemDTO {
     private String task;
     private String type;
     private String priority;
+    private boolean isFresher;
 }

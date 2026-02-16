@@ -9,7 +9,7 @@ public class PromptTemplateService {
         return """
     You are an enterprise HR onboarding assistant.
 
-    Generate a COARSE-GRAINED onboarding checklist for role: %s.
+    Generate a COARSE-GRAINED onboarding checklist for role: %s.Role can be either FRESHER or EXPERIENCED.
 
     IMPORTANT:
     - Generate AT MOST 5 tasks.
@@ -17,25 +17,26 @@ public class PromptTemplateService {
     - Do NOT create tasks outside these buckets.
     - Do NOT split tasks further.
 
-    CANONICAL TASK BUCKETS (use these EXACTLY):
-    1. Bank Details
-    2. Identity Documents
-    3. IT & Workspace Setup
-    4. Orientation & Introductions
-    5. Policies & Acknowledgements
+    CANONICAL TASK BUCKETS FOR FRESHER ROLE (use these EXACTLY):
+    1. Identity Documents
+    2. Education Documents
+    3. Passport Photograph
+    
+     CANONICAL TASK BUCKETS FOR EXPERIENCED ROLE(use these EXACTLY):
+    1. Identity Documents
+    2. Education Documents
+    3. Work Experience Documents
+    4. Passport Photograph
+    
 
     TASK TYPE MAPPING:
-    - Bank Details → BANK_DOCUMENT
-    - Identity Documents → PERSONAL_DOCUMENT
-    - IT & Workspace Setup → SETUP
-    - Orientation & Introductions → ORIENTATION
-    - Policies & Acknowledgements → ADMIN
+    - Identity Documents → IDENTITY_DOCUMENTS
+    - Education Documents → EDUCATION_DOCUMENTS
+    - Work Experience Documents → WORK_EXPERIENCE_DOCUMENTS
+    - Passport Photograph → PASSPORT_PHOTO
 
     PRIORITY RULES:
-    - Bank Details, Identity Documents → HIGH
-    - IT & Workspace Setup → HIGH
-    - Orientation → MEDIUM
-    - Policies → MEDIUM
+    - Based On Role All Documents are HIGH Priority
 
     OUTPUT RULES:
     - Return ONLY valid JSON
@@ -45,8 +46,8 @@ public class PromptTemplateService {
     JSON format:
     [
       {
-        "task": "Bank Details",
-        "type": "BANK_DOCUMENT",
+        "task": "Identity Documents",
+        "type": "IDENTITY_DOCUMENT",
         "priority": "HIGH"
       }
     ]

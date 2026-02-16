@@ -1,6 +1,9 @@
 package com.example.onboardingAgent.onboardingAgent.enums;
 
 public enum TaskType {
-    BANK_DOCUMENT,PERSONAL_DOCUMENT, SETUP, ORIENTATION, ADMIN
+    IDENTITY_DOCUMENTS,
+    EDUCATION_DOCUMENTS,
+    WORK_EXPERIENCE_DOCUMENTS,
+    PASSPORT_PHOTO
 
 }
