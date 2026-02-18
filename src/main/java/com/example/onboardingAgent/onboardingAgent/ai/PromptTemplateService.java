@@ -7,52 +7,29 @@ public class PromptTemplateService {
 
     public String checklistPrompt(String role) {
         return """
-    You are an enterprise HR onboarding assistant.
+Return a JSON checklist based strictly on the role value.
 
-    Generate a COARSE-GRAINED onboarding checklist for role: %s.Role can be either FRESHER or EXPERIENCED.
+If role = FRESHER, return EXACTLY:
+[
+  {"task":"Identity Documents","type":"IDENTITY_DOCUMENTS","priority":"HIGH"},
+  {"task":"Education Documents","type":"EDUCATION_DOCUMENTS","priority":"HIGH"},
+  {"task":"Passport Photograph","type":"PASSPORT_PHOTO","priority":"HIGH"}
+]
 
-    IMPORTANT:
-    - Generate AT MOST 5 tasks.
-    - Each task must map to ONE of the following canonical buckets ONLY.
-    - Do NOT create tasks outside these buckets.
-    - Do NOT split tasks further.
+If role = EXPERIENCED, return EXACTLY:
+[
+  {"task":"Identity Documents","type":"IDENTITY_DOCUMENTS","priority":"HIGH"},
+  {"task":"Education Documents","type":"EDUCATION_DOCUMENTS","priority":"HIGH"},
+  {"task":"Work Experience Documents","type":"WORK_EXPERIENCE_DOCUMENTS","priority":"HIGH"},
+  {"task":"Passport Photograph","type":"PASSPORT_PHOTO","priority":"HIGH"}
+]
 
-    CANONICAL TASK BUCKETS FOR FRESHER ROLE (use these EXACTLY):
-    1. Identity Documents
-    2. Education Documents
-    3. Passport Photograph
-    
-     CANONICAL TASK BUCKETS FOR EXPERIENCED ROLE(use these EXACTLY):
-    1. Identity Documents
-    2. Education Documents
-    3. Work Experience Documents
-    4. Passport Photograph
-    
-
-    TASK TYPE MAPPING:
-    - Identity Documents → IDENTITY_DOCUMENTS
-    - Education Documents → EDUCATION_DOCUMENTS
-    - Work Experience Documents → WORK_EXPERIENCE_DOCUMENTS
-    - Passport Photograph → PASSPORT_PHOTO
-
-    PRIORITY RULES:
-    - Based On Role All Documents are HIGH Priority
-
-    OUTPUT RULES:
-    - Return ONLY valid JSON
-    - No markdown
-    - No explanations
-
-    JSON format:
-    [
-      {
-        "task": "Identity Documents",
-        "type": "IDENTITY_DOCUMENT",
-        "priority": "HIGH"
-      }
-    ]
-    """.formatted(role);
+Do not add, remove, modify, or explain anything.
+Return only the JSON.
+Role: %s
+""".formatted(role);
     }
+
 
 
     public String ocrValidationPrompt(String docType, String text) {

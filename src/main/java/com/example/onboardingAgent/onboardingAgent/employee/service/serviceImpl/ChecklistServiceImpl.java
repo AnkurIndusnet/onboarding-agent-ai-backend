@@ -59,7 +59,7 @@ public class ChecklistServiceImpl implements ChecklistService {
     ) {
 
         // 1. Prompt
-        String prompt = prompts.checklistPrompt(role);
+        String prompt = prompts.checklistPrompt(role.toUpperCase());
 
 
         // 2. Gemini call
